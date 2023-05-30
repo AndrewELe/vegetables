@@ -35,9 +35,9 @@ app.get('/vegetables/Index', async (req, res) => {
 // SHOW
 app.get('/vegetables/Show', async (req, res) => {
     try {
-        const foundVegetables = await Fruit.findOne({_id: req.params.id})
+        const foundVegetables = await Vegetable.findOne({_id: req.params.id})
         res.render('vegetables/Show', {
-            fruit: foundVegetables
+            vegetable: foundVegetables
         })
     } catch (error) {
         res.status(400).send({ message: error.message })
@@ -58,7 +58,7 @@ app.post('/vegetables', async (req, res) => {
     }
     try{
         const createdVegetable = await Vegetable.create(req.body)
-        res.redirect(`/fruits/${createdVegetable._id}`)
+        res.redirect(`/vegetables/${createdVegetable._id}`)
     }catch(error){
         res.status(400).send({message: error.message})
     }
