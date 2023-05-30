@@ -36,7 +36,7 @@ app.get('/vegetables/Index', async (req, res) => {
 app.get('/vegetables/Show', async (req, res) => {
     try {
         const foundVegetables = await Fruit.findOne({_id: req.params.id})
-        res.render('fruits/Show', {
+        res.render('vegetables/Show', {
             fruit: foundVegetables
         })
     } catch (error) {
@@ -46,7 +46,7 @@ app.get('/vegetables/Show', async (req, res) => {
 
 // NEW
 app.get('/vegetables/New', (req, res) => {
-    res.render('fruits/New')
+    res.render('vegetables/New')
 })
 
 // CREATE
@@ -64,12 +64,51 @@ app.post('/vegetables', async (req, res) => {
     }
 })
 
+// EDIT
+app.get('/vegetables/:id/edit', async (req, res) => {
+    try {
+        const foundVegetables = await Vegetable.findOne({_id: req.params.id})
+        res.render('vegetables/Edit', {
+            vegetable:foundVegetables
+        })
+    } catch (error) {
+        res.status(400).send({ message: error.message })
+    }
+})
 
+// UPDATE
+app.put('/vegetables/:id/', async (req, res) => {
+    if(req.body.readyToEat === 'on'){
+        req.body.readyToEat = true;
+    } else {
+        req.body.readyToEat = false;
+    }
+    try {
+        await Vegetable.findOneAndUpdate({'_id': req.params.id}, req.body, { new: true})
+            .then(()=> {
+                res.redirect(`/vegetables/${req.params.id}`)
+            })
+    } catch(error){
+        res.status(400).send({ message: error.message })
+    }
+})
+
+// DELETE
+app.delete('/vegetables/:id', async (req, res) => {
+    try{
+        await Vegetable.findOneAndDelete({'id': req.params.id})
+            .then(() => {
+                red.redirect('/vegetables')
+            })
+    } catch (error) {
+        res.status(400).send({ message: error.message })
+    }
+})
 
 /*********
 listening port
 **********/
 
 app.listen(PORT, () => {
-    console.log(`Fucking the port is ${PORT}`)
+    console.log(`i'm listening, always listening ${PORT}`)
 })
